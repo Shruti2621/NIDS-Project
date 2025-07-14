@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Results - NIDS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="light-theme">
+    <nav class="navbar">
+        <div class="logo">🔒 NIDS</div>
+        <div class="title">Prediction Summary</div>
+    </nav>
+
+    <main class="main-section">
+        <div class="dashboard">
+            <div class="stat-box">Total Connections: {{ total }}</div>
+            <div class="stat-box">Total Attacks: {{ attacks }}</div>
+            <div class="stat-box">Total Normal: {{ normal }}</div>
+            <div class="stat-box">Detection Rate: {{ rate }}%</div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="attackChart"></canvas>
+        </div>
+
+        <div class="results">
+            <h2>Detailed Predictions</h2>
+            {{ tables[0]|safe }}
+        </div>
+
+        <a href="/" class="upload-btn" style="margin-top: 20px;">🔁 Upload Another File</a>
+    </main>
+
+    <script>
+        const chartData = JSON.parse('{{ chart_data|safe }}');
+        const ctx = document.getElementById('attackChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(chartData),
+                datasets: [{
+                    data: Object.values(chartData),
+                    backgroundColor: [
+                        '#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc949'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: { display: true, text: 'Attack Category Distribution' }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

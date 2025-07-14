@@ -1,0 +1,49 @@
+<!-- =================== index.html =================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NIDS - Network Intrusion Detection System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function updateFileName(input) {
+            const fileLabel = document.getElementById("file-name");
+            fileLabel.textContent = input.files[0]?.name || "No file chosen";
+        }
+
+        function showLoading() {
+            document.getElementById("loading").style.display = "block";
+        }
+    </script>
+</head>
+<body class="light-theme">
+    <nav class="navbar">
+        <div class="logo">🔒 NIDS</div>
+        <div class="title">Network Intrusion Detection System</div>
+    </nav>
+
+    <main class="main-section">
+        <h1>Advanced Network Security Monitoring</h1>
+        <p class="description">Upload your network traffic data in CSV format to begin real-time analysis and threat detection.</p>
+
+        <form class="upload-box" method="POST" action="/predict" enctype="multipart/form-data" onsubmit="showLoading()">
+            <label for="file-upload" class="upload-label">
+                <img src="{{ url_for('static', filename='upload image.jpg') }}" alt="Upload Icon" class="upload-icon">
+                <span>Upload Network Traffic Data</span>
+                <input type="file" name="file" id="file-upload" accept=".csv" required onchange="updateFileName(this)">
+            </label>
+            <span id="file-name">No file chosen</span>
+            <button type="submit" class="upload-btn">🚀 Start Prediction</button>
+        </form>
+
+        <div id="loading" class="loading-section" style="display: none;">
+            <p>⏳ Processing... Please wait</p>
+            <img src="{{ url_for('static', filename='spinner.gif') }}" alt="Loading..." width="60">
+        </div>
+
+        {% if error %}
+            <p class="error-msg">⚠️ {{ error }}</p>
+        {% endif %}
+    </main>
+</body>
+</html>
